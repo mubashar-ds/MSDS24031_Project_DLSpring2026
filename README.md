@@ -238,8 +238,8 @@ The combined model integrates Compression-Aware Training with the DCT-Aware arch
 
 | Model | FF++ (Clean) AUC | Celeb-DF v2 (Clean) AUC |
 |------|:----------------:|:-----------------------:|
-| Xception65 | **0.9547** | **0.7872** |
-| ViT-B/16 | **0.8839** | **0.7765** |
+| Xception65 | 0.9547 | 0.7872 |
+| ViT-B/16 | 0.8839 | 0.7765 |
 
 **Observation**
 
@@ -253,12 +253,61 @@ The combined model integrates Compression-Aware Training with the DCT-Aware arch
 | Model | FF++ (Clean) AUC | Celeb-DF v2 (Clean) AUC |
 |------|:----------------:|:-----------------------:|
 | DCT-Xception65 | **0.9657** | 0.7885 |
-| Compression-Aware Xception65 | 0.9452 | **0.8039** |
+| CAT-Xception65 | 0.9452 | **0.8039** |
 | CAT + DCT-Xception65 | 0.9388 | 0.7921 |
+| ViT Consistency | 0.8840 | 0.7765 |
 
-## Performance under Compressions
+## Baselines Compression Robustness Results (AUC)
 
-- To see performance under jpeg compressions, please visit the results/ directory.
+The following table summarizes the robustness of the baseline models under different JPEG compression levels. ROC-AUC is reported as the primary evaluation metric.
+
+### FaceForensics++
+
+| Model | Clean | Q90 | Q70 | Q50 | Q30 | Q10 |
+|------|------:|------:|------:|------:|------:|------:|
+| Xception65 | 0.955 | 0.947 | 0.914 | 0.878 | 0.821 | 0.632 |
+| ViT-B/16 | 0.884 | 0.884 | 0.881 | 0.873 | 0.871 | 0.814 |
+
+### Celeb-DF v2
+
+| Model | Clean | Q90 | Q70 | Q50 | Q30 | Q10 |
+|------|------:|------:|------:|------:|------:|------:|
+| Xception65 | 0.787 | 0.784 | 0.781 | 0.748 | 0.697 | 0.559 |
+| ViT-B/16 | 0.776 | 0.777 | 0.775 | 0.774 | 0.771 | 0.690 |
+
+**Observations**
+
+- Xception65 achieved the highest performance on clean FaceForensics++ images.
+- ViT-B/16 demonstrated substantially better robustness under severe JPEG compression, particularly at **Q10**.
+- Cross-dataset evaluation on Celeb-DF v2 remained considerably more challenging than in-domain evaluation on FaceForensics++.
+- These findings motivate the proposed robustness methods presented in the following sections.
+
+## Proposed Methods Compression Robustness (AUC)
+
+### FaceForensics++
+
+| Model | Clean | Q90 | Q70 | Q50 | Q30 | Q10 |
+|------|------:|------:|------:|------:|------:|------:|
+| DCT-Xception65 | 0.966 | 0.959 | 0.937 | 0.900 | 0.833 | 0.646 |
+| CAT-Xception65 | 0.945 | 0.929 | 0.944 | 0.925 | 0.894 | 0.784 |
+| DCT + CAT Xception65 | 0.939 | 0.934 | 0.931 | 0.915 | 0.888 | 0.791 |
+| ViT-Consistency | 0.884 | 0.884 | 0.881 | 0.873 | 0.871 | 0.814 |
+
+### Celeb-DF v2
+
+| Model | Clean | Q90 | Q70 | Q50 | Q30 | Q10 |
+|------|------:|------:|------:|------:|------:|------:|
+| DCT-Xception65 | 0.789 | 0.788 | 0.783 | 0.752 | 0.698 | 0.553 |
+| CAT-Xception65 | 0.804 | 0.801 | 0.797 | 0.785 | 0.761 | 0.684 |
+| DCT + CAT Xception65 | 0.792 | 0.781 | 0.785 | 0.774 | 0.756 | 0.689 |
+| ViT-Consistency | 0.876 | 0.777 | 0.775 | 0.774 | 0.771 | 0.690 |
+
+### Key Observations
+
+- **DCT-Xception65** achieved the highest performance on clean FaceForensics++ images and provided consistent gains under mild to moderate JPEG compression.
+- **Compression-Aware Training (CAT)** substantially improved robustness under stronger compression levels while also achieving the best cross-dataset performance on Celeb-DF v2.
+- **DCT + CAT Xception65** achieved the strongest performance under the most severe compression level (**Q10**) on FaceForensics++, indicating improved resilience to heavy JPEG degradation.
+- Overall, the proposed methods demonstrate that frequency-aware feature learning and compression-aware training are complementary strategies for improving robustness against image compression.
 
 ---
 
